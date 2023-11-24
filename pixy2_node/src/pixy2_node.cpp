@@ -55,7 +55,7 @@ Pixy2Node::Pixy2Node() :
     private_node_handle_.param("use_servos", use_servos_, false);
 
     if (use_servos_) {
-        servo_subscriber_ = node_handle_.subscribe(id.append("/servo_cmd"), 20, &Pixy2Node::setServo, this);
+        servo_subscriber_ = node_handle_.subscribe(id + "/servo_cmd", 20, &Pixy2Node::setServo, this);
     }
 
     double retryWaitTime;
@@ -97,8 +97,8 @@ Pixy2Node::Pixy2Node() :
     int queue_size;
     private_node_handle_.param("queue_size", queue_size, 50);
 
-    publisher_ = node_handle_.advertise<pixy2_msgs::PixyData>(id.append("/block_data"), queue_size);
-    constantsPublisher_ = node_handle_.advertise<pixy2_msgs::PixyResolution>(id.append("/pixy2_resolution"), 5, true);
+    publisher_ = node_handle_.advertise<pixy2_msgs::PixyData>(id + "/block_data", queue_size);
+    constantsPublisher_ = node_handle_.advertise<pixy2_msgs::PixyResolution>(id + "/pixy2_resolution", 5, true);
 
     // Publish the resolution message
     pixy2_msgs::PixyResolution resolution;
