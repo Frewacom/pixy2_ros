@@ -18,6 +18,8 @@ private:
     void update();
     void setServo(const pixy2_msgs::Servo& msg);
 
+    std::string id;
+
     ros::NodeHandle node_handle_;
     ros::NodeHandle private_node_handle_;
 
@@ -42,6 +44,7 @@ Pixy2Node::Pixy2Node() :
                 use_servos_(false),
                 rate_(50.0)
 {
+    private_node_handle_.param<std::string>(std::string("vehicle_id"), id);
     private_node_handle_.param<std::string>(std::string("frame_id"), frame_id, std::string("pixy_frame"));
 
     double rate;
@@ -51,7 +54,7 @@ Pixy2Node::Pixy2Node() :
     private_node_handle_.param("use_servos", use_servos_, false);
 
     if (use_servos_) {
-        servo_subscriber_ = node_handle_.subscribe("servo_cmd", 20, &Pixy2Node::setServo, this);
+        servo_subscriber_ = node_handle_.subscribe(id.append("/servo_cmd"), 20, &Pixy2Node::setServo, this);
     }
 
     double retryWaitTime;
@@ -92,9 +95,9 @@ Pixy2Node::Pixy2Node() :
 
     int queue_size;
     private_node_handle_.param("queue_size", queue_size, 50);
-    
-    publisher_ = node_handle_.advertise<pixy2_msgs::PixyData>("block_data", queue_size);
-    constantsPublisher_ = node_handle_.advertise<pixy2_msgs::PixyResolution>("pixy2_resolution", 5, true);
+
+    publisher_ = node_handle_.advertise<pixy2_msgs::PixyData>(id.append("/block_data"), queue_size);
+    constantsPublisher_ = node_handle_.advertise<pixy2_msgs::PixyResolution>(id.append("/pixy2_resolution"), 5, true);
 
     // Publish the resolution message
     pixy2_msgs::PixyResolution resolution;
@@ -171,7 +174,7 @@ void Pixy2Node::spin()
 }
 
 int main(int argc, char** argv) {
-    ros::init(argc, argv, "pixy2_node");
+    ros::init(argc, argv, "pixy2_node", ros::init_options::AnonymousName);
 
     ROS_INFO("Pixy2Node for ROS");
 
