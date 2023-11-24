@@ -1,3 +1,4 @@
 [submodule "pixy2_node/pixy2"]
 	path = pixy2_node/pixy2
+        branch = master
 	url = https://github.com/frewacom/pixy2
