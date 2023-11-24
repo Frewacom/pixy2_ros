@@ -164,6 +164,7 @@ target_link_libraries(pixy2_node
   ${catkin_LIBRARIES}
   ${CMAKE_CURRENT_SOURCE_DIR}/pixy2/build/libpixyusb2/libpixy2.a
   ${LIBUSB_1_LIBRARY}
+  -lwiringPi
 )
 
 #############

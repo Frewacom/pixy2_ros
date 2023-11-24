@@ -4,7 +4,8 @@
 #include <pixy2_msgs/PixyResolution.h>
 #include <pixy2_msgs/Servo.h>
 
-#include "libpixyusb2.h"
+#include "util.h"
+#include "Pixy2PI.h"
 
 #define DEFAULT_MAX_RETRIES 10
 #define DEFAULT_RETRY_DURATION 10.0
