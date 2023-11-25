@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include "std_msgs/Bool.h"
 #include <pixy2_msgs/PixyData.h>
 #include <pixy2_msgs/PixyBlock.h>
 #include <pixy2_msgs/PixyResolution.h>
@@ -18,6 +19,7 @@ public:
 private:
     void update();
     void setServo(const pixy2_msgs::Servo& msg);
+    void setLights(const std_msgs::Bool::ConstPtr& msg);
 
     std::string vehicle_id;
 
@@ -53,6 +55,7 @@ Pixy2Node::Pixy2Node() :
     rate_ = ros::Rate(rate);
 
     private_node_handle_.param("use_servos", use_servos_, false);
+    lights_subscriber = node_handle_.subscribe(vehicle_id + "/lights", 20, &Pixy2Node::setLights, this);
 
     if (use_servos_) {
         servo_subscriber_ = node_handle_.subscribe(vehicle_id + "/servo_cmd", 20, &Pixy2Node::setServo, this);
@@ -164,6 +167,15 @@ void Pixy2Node::setServo(const pixy2_msgs::Servo& msg)
     pixy.setServos(servoPositions[0], servoPositions[1]);
 }
 
+void Pixy2Node::setLights(const std_msgs::Bool::ConstPtr& msg)
+{
+    if (msg->data) {
+        pixy.setLamp(1,0);
+    } else {
+        pixy.setLamp(0,0);
+    }
+}
+
 void Pixy2Node::spin()
 {
     while(node_handle_.ok()) {
@@ -177,7 +189,7 @@ void Pixy2Node::spin()
 int main(int argc, char** argv) {
     ros::init(argc, argv, "pixy2_node", ros::init_options::AnonymousName);
 
-    ROS_INFO("Pixy2Node for ROS");
+    ROS_INFO("Pixy2 node started");
 
     Pixy2Node myPixy2;
     myPixy2.spin();
