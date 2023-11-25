@@ -30,6 +30,7 @@ private:
 
     ros::Publisher publisher_;
     ros::Subscriber servo_subscriber_;
+    ros::Subscriber lights_subscriber_;
     std::string frame_id;
 
     ros::Publisher constantsPublisher_;
