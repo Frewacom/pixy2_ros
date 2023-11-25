@@ -56,7 +56,7 @@ Pixy2Node::Pixy2Node() :
     rate_ = ros::Rate(rate);
 
     private_node_handle_.param("use_servos", use_servos_, false);
-    lights_subscriber_ = node_handle_.subscribe(vehicle_id + "/lights", 20, &Pixy2Node::setLights, this);
+    lights_subscriber_ = node_handle_.subscribe("/lights", 20, &Pixy2Node::setLights, this);
 
     if (use_servos_) {
         servo_subscriber_ = node_handle_.subscribe(vehicle_id + "/servo_cmd", 20, &Pixy2Node::setServo, this);
